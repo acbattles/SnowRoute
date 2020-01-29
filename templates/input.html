@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!--Required meta tags-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!--Bootstrap CSS-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>SnowRoute: Avoid accidents and get there safely</title>
+    </head>
+    <body>
+        
+        <div class="container">
+            <h1 class="strong">SnowRoute</h1>
+
+            <form action="/safety" method="GET">
+                <div class="form-group">
+                    <label for="starting_location">Starting Address</label>
+                    <input type="text" id="starting_location" name="starting_location" placeholder="home">
+                </div>
+
+                <div class="form-group">
+                    <label for="weather">Current Weather</label>
+                    <input type="text" id="weather" name="weather" placeholder="snowy">
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Departure Time</label>
+                    <input type="text" id="time" name="time" placeholder="Departure time">
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-success">SUBMIT INFO</button>
+                  </div>
+            </form>
+
+        </div>
+    </body>
+</html>
