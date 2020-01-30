@@ -18,21 +18,42 @@
         <div class="container">
             <h1 class="strong">SnowRoute OUTPUT</h1>
 
-            <p>Your input was: {{the_route}} and you have a 40% increased chance of an accident</p>
-            
+            <p>Your input was: great and you have a 40% increased chance of an accident</p>
             <div id='map' style='width: 400px; height: 300px;'></div>
-            <script>
-                mapboxgl.accessToken = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ';
-                var map = new mapboxgl.Map({
-                    container: 'map',
-                    style: 'mapbox://styles/mapbox/streets-v11',
-                    center: [-104.991531,39.742043],
-                    zoom: 8
-                });
-            </script>
-
         </div>
-        
-        
+    </body>    
 
-    </body>
+    <script>
+       
+       var geojson = {{the_route|tojson}}
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-104.991531,39.742043],
+            zoom: 8
+        });
+        
+        map.on('load', function() {
+            map.addSource('route', {
+                'type': 'geojson',
+                'data': geojson
+                });
+            
+            map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#888',
+                    'line-width': 8
+                }
+            });
+        });
+    </script>
+</html>
