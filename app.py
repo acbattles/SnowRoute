@@ -55,14 +55,8 @@ def risk_calc(inters_df):
 
     return sum_risk
 
-def low_risk(x1,x2):
-    lowest = 0
-    if x1 > x2:
-        lowest = x2
-    else:
-        lowest = x1
-    
-    return lowest
+#def safe_route(x1,x2):
+
 
 @app.route('/')
 def input_data():
@@ -103,11 +97,19 @@ def output():
     total_risk1 = risk_calc(intersections_df1)
     total_risk2 = risk_calc(intersections_df2)
 
-    lowest_risk = low_risk(total_risk1,total_risk2)
-
+    if total_risk1 < total_risk2:
+        best_route = route1
+        next_route = route2
+        risk_out_low = round(total_risk1,1)
+        risk_out_high = round(total_risk2,1)
+    else:
+        best_route = route2
+        next_route = route1
+        risk_out_low = round(total_risk2,1)
+        risk_out_high = round(total_risk1,1)
     
-    return render_template("output.html", route1 = route1, route2 = route2, origin = origin, destination = destination,
-    lowest_risk= lowest_risk, total_risk1 = total_risk1, total_risk2 = total_risk2)
+    return render_template("output.html", routeA = best_route, routeB = next_route, origin = origin, destination = destination,
+    risk1 = risk_out_low, risk2 = risk_out_high)
 
 
 if __name__ == "__main__":

@@ -18,17 +18,20 @@
         <div class="container">
             <h1 class="strong">SnowRoute OUTPUT</h1>
 
-            <p>Route one is: {{total_risk1}}
-                Route two is: {{total_risk2}}
-            </p>
             <div id='map' style='width: 400px; height: 300px;'></div>
+
+            <p style='color:#228B22'>Route one has a {{risk1}} times greater accident risk<br>
+            than routes with similar-sized roads and intersections.</p>
+            <p style='color:#808080'>Route two has a {{risk2}} times greater accident risk<br>
+                than routes with similar-sized roads and intersections.</p>
+                
         </div>
     </body>    
 
     <script>
        
-       var route1 = {{route1|tojson}}
-       var route2 = {{route2|tojson}}
+       var route1 = {{routeA|tojson}}
+       var route2 = {{routeB|tojson}}
        var origin_pt = {{origin|tojson}}
        var destination_pt = {{destination|tojson}}
 
@@ -78,7 +81,7 @@
                     'line-cap': 'round'
                 },
                 'paint': {
-                    'line-color': '#00FF00',
+                    'line-color': '#808080',
                     'line-width': 8
                 }
             });
@@ -95,7 +98,7 @@
                 'type': 'circle',
                 'source': 'origin',
                 'paint': {
-                    'circle-radius': 10,
+                    'circle-radius': 8,
                     'circle-color': '#007cbf'
                 },
                 
@@ -113,7 +116,7 @@
                 'type': 'circle',
                 'source': 'destination',
                 'paint': {
-                    'circle-radius': 10,
+                    'circle-radius': 8,
                     'circle-color': '#ff0000'
                 },
                 
