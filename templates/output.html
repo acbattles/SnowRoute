@@ -18,7 +18,9 @@
         <div class="container">
             <h1 class="strong">SnowRoute OUTPUT</h1>
 
-            <p>Your risk compared to similar-sized roads: {{total_risk}}</p>
+            <p>Route one is: {{total_risk1}}
+                Route two is: {{total_risk2}}
+            </p>
             <div id='map' style='width: 400px; height: 300px;'></div>
         </div>
     </body>    
@@ -26,6 +28,8 @@
     <script>
        
        var geojson = {{the_route|tojson}}
+       var origin_pt = {{origin|tojson}}
+       var destination_pt = {{destination|tojson}}
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ';
         var map = new mapboxgl.Map({
@@ -55,25 +59,41 @@
                 }
             });
         });
-
-        //Working on below...
-        /*
+        
         map.on('load', function() {
-            map.addSource('intesections', {
+            map.addSource('origin', {
                 'type': 'geojson',
-                'data': geojson
+                'data': origin_pt
                 });
             
             map.addLayer({
-                'id': 'intersections',
-                'type': 'symbol',
-                'source': 'intersections',
-                'layout': {
-                    'icon-size': 0.75,
-                    'line-cap': 'round'
+                'id': 'origin',
+                'type': 'circle',
+                'source': 'origin',
+                'paint': {
+                    'circle-radius': 10,
+                    'circle-color': '#007cbf'
                 },
                 
             });
-        });*/
+        });
+
+        map.on('load', function() {
+            map.addSource('destination', {
+                'type': 'geojson',
+                'data': destination_pt
+                });
+            
+            map.addLayer({
+                'id': 'destination',
+                'type': 'circle',
+                'source': 'destination',
+                'paint': {
+                    'circle-radius': 10,
+                    'circle-color': '#ff0000'
+                },
+                
+            });
+        });
     </script>
 </html>

@@ -55,6 +55,15 @@ def risk_calc(inters_df):
 
     return sum_risk
 
+def low_risk(x1,x2):
+    lowest = 0
+    if x1 > x2:
+        lowest = x2
+    else:
+        lowest = x1
+    
+    return lowest
+
 @app.route('/')
 def input_data():
     return render_template('input.html')
@@ -78,19 +87,25 @@ def output():
     origin = start_geo.geojson()['features'][0]
     destination = end_geo.geojson()['features'][0]
 
-    route1 = directions.directions([origin,destination], 'mapbox/driving').geojson()
+    route1 = directions.directions([origin,destination], 'mapbox/driving', alternatives=True).geojson()
 
     #makes a list of the start/end coordinates on each line segment of the route
-    coord_points = route1['features'][0]['geometry']['coordinates']
-    
+    coord_points_alt1 = route1['features'][0]['geometry']['coordinates']
+    coord_points_alt2 = route1['features'][1]['geometry']['coordinates']
+
     #get the coordinates for TURNS (at this point)
-    intersections_df = geodb_query(coord_points)
+    intersections_df1 = geodb_query(coord_points_alt1)
+    intersections_df2 = geodb_query(coord_points_alt2)
 
     #get the relative risk at each turn.
-    total_risk = risk_calc(intersections_df)
+    total_risk1 = risk_calc(intersections_df1)
+    total_risk2 = risk_calc(intersections_df2)
+
+    lowest_risk = low_risk(total_risk1,total_risk2)
 
     
-    return render_template("output.html", the_route = route1, total_risk= total_risk)
+    return render_template("output.html", the_route = route1, origin = origin, destination = destination,
+    lowest_risk= lowest_risk, total_risk1 = total_risk1, total_risk2 = total_risk2)
 
 
 if __name__ == "__main__":
