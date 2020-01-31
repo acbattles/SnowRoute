@@ -18,7 +18,7 @@
         <div class="container">
             <h1 class="strong">SnowRoute OUTPUT</h1>
 
-            <p>Your list of encountered intersections: {{intersections_list}}</p>
+            <p>Your risk compared to similar-sized roads: {{total_risk}}</p>
             <div id='map' style='width: 400px; height: 300px;'></div>
         </div>
     </body>    
@@ -55,5 +55,25 @@
                 }
             });
         });
+
+        //Working on below...
+        /*
+        map.on('load', function() {
+            map.addSource('intesections', {
+                'type': 'geojson',
+                'data': geojson
+                });
+            
+            map.addLayer({
+                'id': 'intersections',
+                'type': 'symbol',
+                'source': 'intersections',
+                'layout': {
+                    'icon-size': 0.75,
+                    'line-cap': 'round'
+                },
+                
+            });
+        });*/
     </script>
 </html>

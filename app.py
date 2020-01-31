@@ -22,14 +22,38 @@ def geodb_query(list_x):
     inters_sql_df = pd.DataFrame()
     for i in list_x:
         sql_query = """
-        SELECT * FROM intersections_data_table
+        SELECT * FROM intersections_final_table
         WHERE ST_Within(geometry, ST_Buffer(ST_MakePoint{x},0.0001));
         """.format(x=i)
     
         inters_sql_df = inters_sql_df.append(pd.read_sql_query(sql_query,con))
 
-    inter_IDs = list(inters_sql_df.MASTERID)
-    return inter_IDs
+    return inters_sql_df
+
+def risk_calc(inters_df):
+    sml_avg = 0.00139
+    med_avg = 0.00205
+    wde_avg = 0.00042
+    
+    sml_rel=0
+    med_rel=0
+    wde_rel=0
+
+    x1 = inters_df.groupby('Road_Width')['Prediction'].sum()
+    x2 = list(inters_df['Road_Width'])
+    
+    if 'Small' in x2:
+        sml_rel=x1['Small']/sml_avg
+        
+    if 'Medium' in x2:
+        med_rel=x1['Medium']/med_avg
+    
+    if 'Wide' in x2:
+        wde_rel=x1['Wide']/wde_avg
+    
+    sum_risk = sum([sml_rel,med_rel,wde_rel])
+
+    return sum_risk
 
 @app.route('/')
 def input_data():
@@ -60,10 +84,13 @@ def output():
     coord_points = route1['features'][0]['geometry']['coordinates']
     
     #get the coordinates for TURNS (at this point)
-    intersections_list = geodb_query(coord_points)
+    intersections_df = geodb_query(coord_points)
+
+    #get the relative risk at each turn.
+    total_risk = risk_calc(intersections_df)
 
     
-    return render_template("output.html", the_route = route1, intersections_list = intersections_list)
+    return render_template("output.html", the_route = route1, total_risk= total_risk)
 
 
 if __name__ == "__main__":
