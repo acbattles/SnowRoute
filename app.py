@@ -87,11 +87,13 @@ def output():
     origin = start_geo.geojson()['features'][0]
     destination = end_geo.geojson()['features'][0]
 
-    route1 = directions.directions([origin,destination], 'mapbox/driving', alternatives=True).geojson()
+    route = directions.directions([origin,destination], 'mapbox/driving', alternatives=True)
+    route1 = route.geojson()['features'][0]
+    route2 = route.geojson()['features'][1]
 
     #makes a list of the start/end coordinates on each line segment of the route
-    coord_points_alt1 = route1['features'][0]['geometry']['coordinates']
-    coord_points_alt2 = route1['features'][1]['geometry']['coordinates']
+    coord_points_alt1 = route1['geometry']['coordinates']
+    coord_points_alt2 = route2['geometry']['coordinates']
 
     #get the coordinates for TURNS (at this point)
     intersections_df1 = geodb_query(coord_points_alt1)
@@ -104,7 +106,7 @@ def output():
     lowest_risk = low_risk(total_risk1,total_risk2)
 
     
-    return render_template("output.html", the_route = route1, origin = origin, destination = destination,
+    return render_template("output.html", route1 = route1, route2 = route2, origin = origin, destination = destination,
     lowest_risk= lowest_risk, total_risk1 = total_risk1, total_risk2 = total_risk2)
 
 

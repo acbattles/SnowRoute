@@ -27,7 +27,8 @@
 
     <script>
        
-       var geojson = {{the_route|tojson}}
+       var route1 = {{route1|tojson}}
+       var route2 = {{route2|tojson}}
        var origin_pt = {{origin|tojson}}
        var destination_pt = {{destination|tojson}}
 
@@ -39,22 +40,45 @@
             zoom: 8
         });
         
+        //route 1
         map.on('load', function() {
-            map.addSource('route', {
+            map.addSource('route1', {
                 'type': 'geojson',
-                'data': geojson
+                'data': route1
                 });
             
             map.addLayer({
-                'id': 'route',
+                'id': 'route1',
                 'type': 'line',
-                'source': 'route',
+                'source': 'route1',
                 'layout': {
                     'line-join': 'round',
                     'line-cap': 'round'
                 },
                 'paint': {
-                    'line-color': '#888',
+                    'line-color': '#228B22',
+                    'line-width': 8
+                }
+            });
+        });
+
+        //route 2
+        map.on('load', function() {
+            map.addSource('route2', {
+                'type': 'geojson',
+                'data': route2
+                });
+            
+            map.addLayer({
+                'id': 'route2',
+                'type': 'line',
+                'source': 'route2',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#00FF00',
                     'line-width': 8
                 }
             });
