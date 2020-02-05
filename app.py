@@ -14,6 +14,7 @@ from geoalchemy2 import Geometry
 
 
 app = Flask(__name__)
+app.config.from_object(__name__)
 
 #def get_point():
 
