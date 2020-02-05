@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from flask import Flask, render_template, request
 from mapbox import Geocoder, Directions
 from shapely.geometry import Point, LineString
@@ -81,7 +83,7 @@ def output():
     origin = start_geo.geojson()['features'][0]
     destination = end_geo.geojson()['features'][0]
 
-    route = directions.directions([origin,destination], 'mapbox/driving', alternatives=True)
+    route = directions.directions([origin,destination], 'mapbox/driving', alternatives=True, exclude = 'motorway')
     route1 = route.geojson()['features'][0]
     route2 = route.geojson()['features'][1]
 
