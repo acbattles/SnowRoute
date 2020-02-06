@@ -21,11 +21,12 @@ app.config.from_object(__name__)
 
 def geodb_query(list_x):
     
+    #change to the NEW DB (and make sure it's alligned in the app online)
     con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'andrew17')
     inters_sql_df = pd.DataFrame()
     for i in list_x:
         sql_query = """
-        SELECT * FROM intersections_final_table
+        SELECT * FROM intersections_class_table
         WHERE ST_Within(geometry, ST_Buffer(ST_MakePoint{x},0.0001));
         """.format(x=i)
     
@@ -97,8 +98,8 @@ def output():
     intersections_df2 = geodb_query(coord_points_alt2)
 
     #get the relative risk at each turn.
-    total_risk1 = risk_calc(intersections_df1)
-    total_risk2 = risk_calc(intersections_df2)
+    total_risk1 = intersections_df1['Pred_Prob'].max()
+    total_risk2 = intersections_df2['Pred_Prob'].max()
 
     if total_risk1 < total_risk2:
         best_route = route1
