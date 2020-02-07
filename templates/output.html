@@ -24,6 +24,7 @@
 
             <p style='color:#228B22'>Max intersection probability: {{risk1}}</p>
             <p style='color:#808080'>Max intersection probability: {{risk2}}</p>
+            <p style='color:#FFA500'>Max intersection probability: {{risk_safe}}</p>
                 
         </div>
     </body>    
@@ -32,6 +33,7 @@
        
        var route1 = {{routeA|tojson}}
        var route2 = {{routeB|tojson}}
+       var safest = {{safe_route|tojson}}
        var origin_pt = {{origin|tojson}}
        var destination_pt = {{destination|tojson}}
 
@@ -43,6 +45,29 @@
             zoom: 8
         });
         
+        //saferoute
+        map.on('load', function() {
+            map.addSource('safest', {
+                'type': 'geojson',
+                'data': safest
+                });
+            
+            map.addLayer({
+                'id': 'safest',
+                'type': 'line',
+                'source': 'safest',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#FFA500',
+                    'line-width': 8
+                }
+            });
+        });
+
+
         //route 1
         map.on('load', function() {
             map.addSource('route1', {

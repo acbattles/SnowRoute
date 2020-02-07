@@ -5,7 +5,7 @@ from mapbox import Geocoder, Directions
 from shapely.geometry import Point, LineString
 import pandas as pd
 import numpy as np
-import geopandas
+import geopandas as gpd
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 import psycopg2
@@ -16,8 +16,33 @@ from geoalchemy2 import Geometry
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-#def get_point():
+def safe_points(route_list):
+    con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'andrew17')
+    nearby_df = pd.DataFrame()
+    for i in route_list:
+        sql_query = """
+        SELECT * FROM intersections_class_table
+        WHERE ST_Within(geometry, ST_Buffer(ST_MakePoint{x},0.005))
+        AND pred_prob < 0.5
+        ORDER BY pred_prob ASC
+        LIMIT 1;
+        """.format(x=i)
+    
+        nearby_df = nearby_df.append(pd.read_sql_query(sql_query,con))
 
+    return nearby_df
+
+def get_points(safe_df):
+    geocoder = Geocoder()
+    geocoder.session.params['access_token'] = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ'
+
+    coords=[]
+    for index, row in safe_df.iterrows():
+        x1=str(row['LONGITUDE'])+","+str(row['LATITUDE'])
+        x2 = geocoder.forward(x1).geojson()['features'][0]
+        coords.append(x2)
+
+    return coords
 
 def geodb_query(list_x):
     
@@ -98,22 +123,31 @@ def output():
     intersections_df2 = geodb_query(coord_points_alt2)
 
     #get the relative risk at each turn.
-    total_risk1 = intersections_df1['Pred_Prob'].max()
-    total_risk2 = intersections_df2['Pred_Prob'].max()
+    total_risk1 = intersections_df1['pred_prob'].max()
+    total_risk2 = intersections_df2['pred_prob'].max()
+
+    #get the points for the 'safe' route [WORKING ON THIS]
+    safe_df1 = safe_points(coord_points_alt1).reset_index()
+    safe_risk = safe_df1['pred_prob'].max()
+
+
+    saferoute_list = get_points(safe_df1)
+    saferoute_full = directions.directions(saferoute_list, 'mapbox/driving', exclude = 'motorway')
+    safe_route = saferoute_full.geojson()['features'][0]
 
     if total_risk1 < total_risk2:
         best_route = route1
         next_route = route2
-        risk_out_low = round(total_risk1,1)
-        risk_out_high = round(total_risk2,1)
+        risk_out_low = round(total_risk1,2)
+        risk_out_high = round(total_risk2,2)
     else:
         best_route = route2
         next_route = route1
-        risk_out_low = round(total_risk2,1)
-        risk_out_high = round(total_risk1,1)
+        risk_out_low = round(total_risk2,2)
+        risk_out_high = round(total_risk1,2)
     
-    return render_template("output.html", routeA = best_route, routeB = next_route, origin = origin, destination = destination,
-    risk1 = risk_out_low, risk2 = risk_out_high)
+    return render_template("output.html", routeA = best_route, routeB = next_route, safe_route=safe_route, origin = origin, destination = destination,
+    risk1 = risk_out_low, risk2 = risk_out_high, risk_safe=safe_risk)
 
 
 if __name__ == "__main__":
