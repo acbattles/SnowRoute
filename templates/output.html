@@ -16,14 +16,16 @@
 
     <body>
         <div class="container">
-            <h1 class="strong">SnowRoute OUTPUT</h1>
+            <h1 class="strong">Your Route Options</h1>
 
             <div id='map' style='width: 400px; height: 300px;'></div>
 
-            <p>The route in GREEN encounters less dangerous intersetions.</p>
+            <p>The route in GREEN encounters less-dangerous intersetions.<br>
+                It is approximately {{risk_proportion}}% safer.<br>
+                Drive Safe!</p>
 
-            <p style='color:#228B22'>Max intersection probability: {{risk1}}</p>
-            <p style='color:#808080'>Max intersection probability: {{risk2}}</p>
+            <!--<p style='color:#228B22'>Total intersection probability: {{risk1}}</p>
+            <p style='color:#808080'>Total intersection probability: {{risk2}}</p>-->
                 
         </div>
     </body>    
@@ -43,28 +45,6 @@
             zoom: 8
         });
         
-        //route 1
-        map.on('load', function() {
-            map.addSource('route1', {
-                'type': 'geojson',
-                'data': route1
-                });
-            
-            map.addLayer({
-                'id': 'route1',
-                'type': 'line',
-                'source': 'route1',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': '#228B22',
-                    'line-width': 8
-                }
-            });
-        });
-
         //route 2
         map.on('load', function() {
             map.addSource('route2', {
@@ -82,6 +62,28 @@
                 },
                 'paint': {
                     'line-color': '#808080',
+                    'line-width': 8
+                }
+            });
+        });
+
+        //route 1
+        map.on('load', function() {
+            map.addSource('route1', {
+                'type': 'geojson',
+                'data': route1
+                });
+            
+            map.addLayer({
+                'id': 'route1',
+                'type': 'line',
+                'source': 'route1',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#228B22',
                     'line-width': 8
                 }
             });

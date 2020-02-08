@@ -34,33 +34,6 @@ def geodb_query(list_x):
 
     return inters_sql_df
 
-def risk_calc(inters_df):
-    sml_avg = 0.00139
-    med_avg = 0.00205
-    wde_avg = 0.00042
-    
-    sml_rel=0
-    med_rel=0
-    wde_rel=0
-
-    x1 = inters_df.groupby('Road_Width')['Prediction'].sum()
-    x2 = list(inters_df['Road_Width'])
-    
-    if 'Small' in x2:
-        sml_rel=x1['Small']/sml_avg
-        
-    if 'Medium' in x2:
-        med_rel=x1['Medium']/med_avg
-    
-    if 'Wide' in x2:
-        wde_rel=x1['Wide']/wde_avg
-    
-    sum_risk = sum([sml_rel,med_rel,wde_rel])
-
-    return sum_risk
-
-#def safe_route(x1,x2):
-
 
 @app.route('/')
 def input_data():
@@ -98,22 +71,25 @@ def output():
     intersections_df2 = geodb_query(coord_points_alt2)
 
     #get the relative risk at each turn.
-    total_risk1 = intersections_df1['Pred_Prob'].max()
-    total_risk2 = intersections_df2['Pred_Prob'].max()
+    total_risk1 = intersections_df1['pred_prob'].sum()
+    total_risk2 = intersections_df2['pred_prob'].sum()
 
     if total_risk1 < total_risk2:
         best_route = route1
         next_route = route2
         risk_out_low = round(total_risk1,1)
         risk_out_high = round(total_risk2,1)
+        
     else:
         best_route = route2
         next_route = route1
         risk_out_low = round(total_risk2,1)
         risk_out_high = round(total_risk1,1)
     
+    risk_proportion = round(((1-(risk_out_low/risk_out_high))*100),1)
+
     return render_template("output.html", routeA = best_route, routeB = next_route, origin = origin, destination = destination,
-    risk1 = risk_out_low, risk2 = risk_out_high)
+    risk1 = risk_out_low, risk2 = risk_out_high, risk_proportion = risk_proportion)
 
 
 if __name__ == "__main__":
