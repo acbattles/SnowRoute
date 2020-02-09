@@ -21,7 +21,6 @@ app.config.from_object(__name__)
 
 def geodb_query(list_x):
     
-    #change to the NEW DB (and make sure it's alligned in the app online)
     con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'andrew17')
     inters_sql_df = pd.DataFrame()
     for i in list_x:
@@ -33,7 +32,6 @@ def geodb_query(list_x):
         inters_sql_df = inters_sql_df.append(pd.read_sql_query(sql_query,con))
 
     return inters_sql_df
-
 
 @app.route('/')
 def input_data():
@@ -73,6 +71,8 @@ def output():
     #get the relative risk at each turn.
     total_risk1 = intersections_df1['pred_prob'].sum()
     total_risk2 = intersections_df2['pred_prob'].sum()
+
+
 
     if total_risk1 < total_risk2:
         best_route = route1
