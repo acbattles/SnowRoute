@@ -19,11 +19,15 @@
 
             <h4>Please enter a starting and ending address within the City of Denver.</h4>
 
+            {% if error %}
+            <div class="p-3 mb-2 bg-danger text-black">{{error}}</div>
+            {% endif %}
+
             <form action="/output" method="GET">
                 <div class="form-group">
                     <div class='col-4'>
                         <label for="starting_location">Starting Address</label>
-                        <input type="text" class='form-control' id="starting_location" name="starting_location" placeholder="2840 Blake St, 80205">
+                        <input type="text" class='form-control' id="starting_location" name="starting_location" placeholder="200 E Colfax Ave, 80203">
                     </div>
                 </div>
 
@@ -39,7 +43,10 @@
                 </div>
             </form>
 
-            <p><i>Please note: SnowRoute only works for routes within the Denver City limits</i></p>
+            <p><i>Please note: SnowRoute only works for routes within the Denver City limits</i><br><br>
+            If you just want to see how the app works, just hit the button and<br>
+            we'll find your route from the Colorado Capitol Building to the Wings over the Rockies Museum</p>
+
 
         </div>
     </body>

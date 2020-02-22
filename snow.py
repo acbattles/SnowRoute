@@ -5,19 +5,13 @@ from mapbox import Geocoder, Directions
 from shapely.geometry import Point, LineString
 import pandas as pd
 import numpy as np
-import geopandas
+import geopandas, psycopg2, datetime
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
-import psycopg2
 from geoalchemy2 import Geometry
-
-
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
-#def get_point():
-
 
 def geodb_query(list_x):
     """
@@ -46,7 +40,7 @@ def input_data():
 
 @app.route('/output', methods=['GET','POST'])
 def output():
-    
+
     #get the lat/long of origin and destination
     geocoder = Geocoder()
     geocoder.session.params['access_token'] = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ'
@@ -55,10 +49,17 @@ def output():
 
     starting_location = request.args.get('starting_location')
     ending_location = request.args.get('ending_location')
-    #possibly code in auto-responses if nothing input to not break app
 
-    start_geo = geocoder.forward(starting_location)
-    end_geo = geocoder.forward(ending_location)
+    #Auto input, if fields left blank
+    if starting_location == '':
+        start_geo = geocoder.forward('200 E Colfax Ave, Denver, CO 80203')
+    else:
+        start_geo = geocoder.forward(starting_location)
+
+    if ending_location == '':
+        end_geo = geocoder.forward('7711 E Academy Blvd, 80230')
+    else:
+        end_geo = geocoder.forward(ending_location)
     
     origin = start_geo.geojson()['features'][0]
     destination = end_geo.geojson()['features'][0]
@@ -79,8 +80,7 @@ def output():
     total_risk1 = intersections_df1['pred_prob'].sum()
     total_risk2 = intersections_df2['pred_prob'].sum()
 
-
-
+    
     if total_risk1 < total_risk2:
         best_route = route1
         next_route = route2
