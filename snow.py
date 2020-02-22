@@ -20,6 +20,12 @@ app.config.from_object(__name__)
 
 
 def geodb_query(list_x):
+    """
+    Queries the database for intersections encountered along route.
+    Takes in the list of points generated from the MapBox route.
+    Outputs a dataframe with rows as intersections.
+
+    """
     
     con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'andrew17')
     inters_sql_df = pd.DataFrame()
@@ -40,6 +46,7 @@ def input_data():
 
 @app.route('/output', methods=['GET','POST'])
 def output():
+    
     #get the lat/long of origin and destination
     geocoder = Geocoder()
     geocoder.session.params['access_token'] = 'pk.eyJ1IjoiYWNiYXR0bGVzIiwiYSI6ImNrNXptdWtnajA4ZGYzamxscmR5ZmV4ZGEifQ.e99budVtY2MsprEhvTNEtQ'

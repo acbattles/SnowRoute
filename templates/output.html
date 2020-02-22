@@ -7,7 +7,7 @@
 
         <!--Bootstrap CSS-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <title>SnowRoute: Avoid accidents and get there safely</title>
+        <title>SnowRoute: get there safely</title>
 
         <script src='https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css' rel='stylesheet' />
@@ -16,13 +16,16 @@
 
     <body>
         <div class="container">
-            <h1 class="strong">Your Route Options</h1>
+            <div class="jumbotron p-4">
+                <h1 class="display-4">SnowRoute</h1>
+                <p class="lead">Here are your route options. Drive Safe!</p>
+            </div>
 
             <div id='map' style='width: 400px; height: 300px;'></div>
 
-            <p>The route in GREEN encounters less-dangerous intersetions.<br>
-                It is approximately {{risk_proportion}}% safer.<br>
-                Drive Safe!</p>
+            <p>The green route is approximately {{risk_proportion}}% safer than the grey route.</p>
+            <p>SnowRoute determines route risk based on the probability that<br>
+            an encountered intersection is likely to have an accident.</p>
 
             <!--<p style='color:#228B22'>Total intersection probability: {{risk1}}</p>
             <p style='color:#808080'>Total intersection probability: {{risk2}}</p>-->
@@ -119,7 +122,7 @@
                 'source': 'destination',
                 'paint': {
                     'circle-radius': 8,
-                    'circle-color': '#ff0000'
+                    'circle-color': '#FFA500'
                 },
                 
             });

@@ -7,28 +7,39 @@
 
         <!--Bootstrap CSS-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <title>SnowRoute: Avoid accidents and get there safely</title>
+        <title>SnowRoute: get there safely</title>
     </head>
+    
     <body>
-        
         <div class="container">
-            <h1 class="strong">SnowRoute</h1>
+            <div class="jumbotron p-4">
+                <h1 class="display-4">SnowRoute</h1>
+                <p class="lead">Are the roads icy in Denver? Find a safer route!</p>
+            </div>
+
+            <h4>Please enter a starting and ending address within the City of Denver.</h4>
 
             <form action="/output" method="GET">
                 <div class="form-group">
-                    <label for="starting_location">Starting Address</label>
-                    <input type="text" id="starting_location" name="starting_location" placeholder="home">
+                    <div class='col-4'>
+                        <label for="starting_location">Starting Address</label>
+                        <input type="text" class='form-control' id="starting_location" name="starting_location" placeholder="2840 Blake St, 80205">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="ending_location">Ending Address</label>
-                    <input type="text" id="ending_location" name="ending_location" placeholder="work">
+                    <div class='col-4'>
+                        <label for="ending_location">Ending Address</label>
+                        <input type="text" class='form-control' id="ending_location" name="ending_location" placeholder="7711 E Academy Blvd, 80230">
+                    </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="btn btn-success">SUBMIT INFO</button>
-                  </div>
+                    <button type="submit" class="btn btn-success">Find my SafeRoute!</button>
+                </div>
             </form>
+
+            <p><i>Please note: SnowRoute only works for routes within the Denver City limits</i></p>
 
         </div>
     </body>
