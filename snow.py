@@ -5,7 +5,7 @@ from mapbox import Geocoder, Directions
 from shapely.geometry import Point, LineString
 import pandas as pd
 import numpy as np
-import geopandas, psycopg2, datetime
+import geopandas, psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from geoalchemy2 import Geometry
@@ -21,7 +21,7 @@ def geodb_query(list_x):
 
     """
     
-    con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'andrew17')
+    con = psycopg2.connect(database = 'intersections', user = 'postgres', password = 'inters2',host='localhost')
     inters_sql_df = pd.DataFrame()
     for i in list_x:
         sql_query = """
@@ -77,8 +77,8 @@ def output():
     intersections_df2 = geodb_query(coord_points_alt2)
 
     #get the relative risk at each turn.
-    total_risk1 = intersections_df1['pred_prob'].sum()
-    total_risk2 = intersections_df2['pred_prob'].sum()
+    total_risk1 = intersections_df1['Pred_Prob'].sum()
+    total_risk2 = intersections_df2['Pred_Prob'].sum()
 
     
     if total_risk1 < total_risk2:
@@ -100,4 +100,4 @@ def output():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0',debug=False)
